@@ -1,0 +1,18 @@
+.chart-container {
+  width: 622px;
+  margin: 200px auto;
+  //box-shadow: 0 0 2px 3px rgba(0,0,0, 0.1);
+  position: relative;
+}
+.chart-container {
+  svg {
+    position: relative;
+  }
+  svg.enable-graph {
+    transform: translateY(20%);
+  }
+  svg.disable-graph {
+    right: 1.4%;
+  }
+}
+
