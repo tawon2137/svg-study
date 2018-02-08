@@ -4,13 +4,12 @@ export class DisableGraphComponent extends GraphComponent {
     constructor(selector, data) {
         super(selector, data);
     }
-    createPath(color) {
+    createPath() {
         this.path = document.createElementNS(this.svg.namespaceURI, 'path');
-        this.path.setAttribute('fill', color);
         const id = 'graph-filter-2';
         this.setDefs(this.path, {
             name: 'filter',
-            id: id,
+            id: `url(#${id})`,
             html: `
                <filter id="${id}">
                 <feOffset dx="0.5" dy="1" in="SourceAlpha"></feOffset>
@@ -25,21 +24,18 @@ export class DisableGraphComponent extends GraphComponent {
             </filter>
             `
         });
+        this.path.setAttribute('fill', '#EBEBEB');
         this.svg.appendChild(this.path);
         this.svg.setAttribute('class', 'disable-graph');
     }
     init() {
         super.init();
-
     }
     render() {
         if(!this.path) {
-            this.createPath(`#EBEBEB`);
+            this.createPath();
         }
-        const position = {
-            w: this.el.offsetWidth / 100 * this.data.disableValue,
-            h: this.el.offsetWidth / 100 * 7.8
-        };
+        const position = this.getPosition(this.data.disableValue);
 
         this.svg.style.width = position.w;
         this.svg.style.height = position.h;
@@ -47,16 +43,18 @@ export class DisableGraphComponent extends GraphComponent {
         const graphHeight = position.h - 12;
         const pointCurve = graphHeight * 0.3;
         const curve = position.h * 0.50, curveAngle = position.h * 0.083;
-        this.path.setAttribute('d', `
+        if(this.data.disableValue) {
+            this.path.setAttribute('d', `
             M ${position.w} ${graphHeight} 
             L 0 ${graphHeight}
-            l ${curve} -${graphHeight - pointCurve} 
-            c ${curveAngle} -${curveAngle} ${curveAngle * 3} -${pointCurve} ${curveAngle * 6} -${pointCurve}
+            l ${curve} ${-(graphHeight - pointCurve)} 
+            c ${curveAngle} ${-curveAngle} ${curveAngle * 3} ${-pointCurve} ${curveAngle * 6} ${-pointCurve}
             H ${position.w - curveAngle}
             a ${curveAngle} ${curveAngle} 0 0 1 ${curveAngle} ${curveAngle}
             v ${graphHeight - curveAngle * 2}
-            a ${curveAngle} ${curveAngle} 0 0 1 -${curveAngle} ${curveAngle}
+            a ${curveAngle} ${curveAngle} 0 0 1 ${-curveAngle} ${curveAngle}
             z
         `);
+        }
     }
 }

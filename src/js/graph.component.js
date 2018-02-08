@@ -25,7 +25,12 @@ export class GraphComponent {
         this.data = data;
         this.render();
     }
-
+    getPosition(value) {
+        return {
+            w: Math.round(this.el.offsetWidth / 100 * value) - 1,
+            h: Math.round(this.el.offsetWidth / 100 * 7.8)
+        };
+    }
     createSvg() {
         this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         this.defs = document.createElementNS(this.svg.namespaceURI, 'defs');
@@ -37,8 +42,7 @@ export class GraphComponent {
     }
     render() {}
     setDefs(el, defsModel) {
-        console.log(this);
         this.defs.innerHTML += defsModel.html;
-        el.setAttribute(defsModel.name, `url(#${defsModel.id})`);
+        el.setAttribute(defsModel.name, `${defsModel.id}`);
     }
 };
